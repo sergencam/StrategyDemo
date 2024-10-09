@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,13 +10,15 @@ public abstract class Building : MonoBehaviour
     private float m_startHp;
     [SerializeField] private TextMeshProUGUI m_hpText;
     [SerializeField] private BuildingTypes m_buildingType;
+    [SerializeField] private GameObject m_outline, m_damageFlash;
     private bool m_isPlaced;
     private SpriteRenderer m_spriteRenderer;
     private TileManager m_tileManager;
     private UIManager m_uiManager;
     private Tile m_activeTile;
     private Collider2D m_collider;
-    
+    private Coroutine m_damageFlashCoroutine;
+
     private void Start()
     {
         m_tileManager = TileManager.Instance;
@@ -30,8 +34,12 @@ public abstract class Building : MonoBehaviour
 
     private void Update()
     {
-        SetPositionToMousePos();
         CheckClickActions();
+    }
+
+    private void LateUpdate()
+    {
+        SetPositionToMousePos();
     }
 
     private void SetPositionToMousePos()
@@ -47,6 +55,7 @@ public abstract class Building : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
             m_isPlaced = true;
             m_uiManager.IsProductSelected = false;
+            SetOutline(true);
             m_uiManager.OpenInfoPanel(m_buildingType, this);
             SetOpacity(1f);
             return;
@@ -98,12 +107,16 @@ public abstract class Building : MonoBehaviour
 
     private void CheckClickActions()
     {
+        if(!m_isPlaced)return;
         if (Input.GetMouseButtonDown(1) && CheckObjectUnderMouse())
             ProductManager.Instance.OnBuildingSelectedForAttack(this);
         
         if (Input.GetMouseButtonDown(0) && CheckObjectUnderMouse())
-            if(!EventSystem.current.IsPointerOverGameObject())
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                SetOutline(true);
                 m_uiManager.OpenInfoPanel(m_buildingType, this);
+            }
     }
     
     private bool CheckObjectUnderMouse()
@@ -120,12 +133,23 @@ public abstract class Building : MonoBehaviour
         return false;
     }
 
+    private IEnumerator DamageFlashRoutine(float flashTime)
+    {
+        m_damageFlash.gameObject.SetActive(true);
+        yield return new WaitForSeconds(flashTime);
+        m_damageFlash.gameObject.SetActive(false);
+    }
+    
     public void OnTakeDamage(float damage)
     {
         m_hp -= damage;
         m_hpText.text = "HP:" + m_hp;
+        if(m_damageFlashCoroutine!=null)
+            StopCoroutine(m_damageFlashCoroutine);
         if(m_hp<=0)
             OnDead();
+        else
+            m_damageFlashCoroutine = StartCoroutine(DamageFlashRoutine(0.1f));
     }
 
     private void OnDead()
@@ -133,6 +157,7 @@ public abstract class Building : MonoBehaviour
         m_tileManager.EnableCoveredTiles(transform.position, GetRealWorldSize());
         gameObject.SetActive(false);
         FactoryManager.Instance.AddBuildingToPool(this);
+        m_uiManager.CheckCanCloseInfoPanel(this);
     }
 
     public Building OnSelectedFromPool()
@@ -144,7 +169,13 @@ public abstract class Building : MonoBehaviour
         SetOpacity(0.5f);
         transform.GetChild(0).gameObject.SetActive(false);
         gameObject.SetActive(true);
+        m_damageFlash.SetActive(false);
         return this;
         
+    }
+    
+    public void SetOutline(bool active)
+    {
+        m_outline.SetActive(active);
     }
 }

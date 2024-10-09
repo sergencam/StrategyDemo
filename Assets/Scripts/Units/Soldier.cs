@@ -16,6 +16,7 @@ public abstract class Soldier : MonoBehaviour
     private AIController m_aiController;                         // Reference to the AI controller component
     private TileManager m_tileManager;
     private ProductManager m_productManager;
+    private UIManager m_uiManager;
 
     /// <summary>
     /// Called when the script instance is being loaded. Initializes the AIController.
@@ -29,6 +30,7 @@ public abstract class Soldier : MonoBehaviour
     {
         m_tileManager = TileManager.Instance;
         m_productManager = ProductManager.Instance;
+        m_uiManager = UIManager.Instance;
     }
 
     /// <summary>

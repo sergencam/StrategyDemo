@@ -100,15 +100,16 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    private Tile GetClosestTile(Vector3 mouseWorldPosition)
+    private Tile GetClosestTile(Vector3 pos)
     {
         Tile closestTile = null;
         float closestDistance = float.MaxValue;
 
         foreach (Tile tile in m_allTiles)
         {
+            if(!tile.isWalkable)continue;
             Vector3 tilePosition = tile.transform.position;
-            float distance = Vector3.Distance(tilePosition, mouseWorldPosition);
+            float distance = Vector3.Distance(tilePosition, pos);
             if (distance < closestDistance)
             {
                 closestDistance = distance;
