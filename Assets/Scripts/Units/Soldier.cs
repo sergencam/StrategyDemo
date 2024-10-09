@@ -119,7 +119,6 @@ public abstract class Soldier : MonoBehaviour
     {
         Vector3 currentPos = transform.position;
         float dist = Vector3.Distance(currentPos, targetPos);
-        print(dist);
         return dist < m_attackRange;
     }
 
