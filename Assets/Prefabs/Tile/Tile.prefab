@@ -92,8 +92,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalkable: 1
-  gCost: 0
-  hCost: 0
+  GCost: 0
+  HCost: 0
   parent: {fileID: 0}
 --- !u!1 &4918714304620139237
 GameObject:
