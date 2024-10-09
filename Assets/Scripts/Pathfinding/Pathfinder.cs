@@ -25,11 +25,11 @@ public class Pathfinder
                 if (!neighbor.isWalkable || closedList.Contains(neighbor))
                     continue;
 
-                float newCostToNeighbor = currentTile.gCost + GetDistance(currentTile, neighbor);
-                if (newCostToNeighbor < neighbor.gCost || !openList.Contains(neighbor))
+                float newCostToNeighbor = currentTile.GCost + GetDistance(currentTile, neighbor);
+                if (newCostToNeighbor < neighbor.GCost || !openList.Contains(neighbor))
                 {
-                    neighbor.gCost = newCostToNeighbor;
-                    neighbor.hCost = GetDistance(neighbor, targetTile);
+                    neighbor.GCost = newCostToNeighbor;
+                    neighbor.HCost = GetDistance(neighbor, targetTile);
                     neighbor.parent = currentTile;
 
                     if (!openList.Contains(neighbor))
@@ -58,7 +58,7 @@ public class Pathfinder
     {
         Tile lowestFScoreTile = openList[0];
         foreach (Tile tile in openList)
-            if (tile.fCost < lowestFScoreTile.fCost)
+            if (tile.FCost < lowestFScoreTile.FCost)
                 lowestFScoreTile = tile;
         return lowestFScoreTile;
     }

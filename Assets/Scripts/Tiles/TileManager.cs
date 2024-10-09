@@ -95,7 +95,7 @@ public class TileManager : MonoBehaviour
                 tile.HighlightTile(highlightColor);
             }
             else
-                tile.SetTileDefault();;
+                tile.SetTileDefault();
         }
     }
 

@@ -12,7 +12,6 @@ public abstract class Soldier : MonoBehaviour
     private AIController m_aiController;
     private TileManager m_tileManager;
     private ProductManager m_productManager;
-    private UIManager m_uiManager;
 
     private void Awake()
     {
@@ -23,7 +22,6 @@ public abstract class Soldier : MonoBehaviour
     {
         m_tileManager = TileManager.Instance;
         m_productManager = ProductManager.Instance;
-        m_uiManager = UIManager.Instance;
     }
 
     private void Update()
