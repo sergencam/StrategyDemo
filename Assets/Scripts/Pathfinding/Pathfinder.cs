@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Pathfinder
 {
+    // Finds the shortest path from startTile to targetTile
     public List<Tile> FindPath(Tile startTile, Tile targetTile, float tileSize, List<Tile> allTiles)
     {
         List<Tile> openList = new List<Tile>();
@@ -40,6 +41,7 @@ public class Pathfinder
         return null;
     }
 
+    // Retraces the path from endTile to startTile
     private List<Tile> RetracePath(Tile startTile, Tile endTile)
     {
         List<Tile> path = new List<Tile>();
@@ -54,6 +56,7 @@ public class Pathfinder
         return path;
     }
 
+    // Finds the tile with the lowest F score from the open list
     private Tile GetTileWithLowestFScore(List<Tile> openList)
     {
         Tile lowestFScoreTile = openList[0];
@@ -63,6 +66,7 @@ public class Pathfinder
         return lowestFScoreTile;
     }
 
+    //Gets walkable neighbor tiles of the current tile
     private List<Tile> GetNeighbors(Tile currentTile, float tileSize, List<Tile> allTiles)
     {
         List<Tile> neighbors = new List<Tile>();
@@ -93,7 +97,7 @@ public class Pathfinder
         return neighbors;
     }
 
-
+    // Calculates the distance between two tiles using Manhattan distance
     private float GetDistance(Tile tileA, Tile tileB)
     {
         return Mathf.Abs(tileA.transform.position.x - tileB.transform.position.x) + Mathf.Abs(tileA.transform.position.y - tileB.transform.position.y);

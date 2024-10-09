@@ -10,6 +10,9 @@ public class BuildingFactory : MonoBehaviour, IBuildingFactory
     private List<Building> m_createdBuildings = new();
     private List<Building> m_deactivatedBuildingsPool = new();
 
+    //Creates building
+    //If pool has type of building wants to create it will find the building from pool and prepare it for use
+    //Or create a building from scratch
     public Building CreateBuilding(BuildingTypes buildingTypes)
     {
         Building createdBuilding;
@@ -55,6 +58,7 @@ public class BuildingFactory : MonoBehaviour, IBuildingFactory
         return createdBuilding;
     }
 
+    //Adds given building to buildingPool list
     public void AddBuildingToPool(Building building)
     {
         if(!m_deactivatedBuildingsPool.Contains(building))

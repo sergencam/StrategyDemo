@@ -26,9 +26,11 @@ public abstract class Soldier : MonoBehaviour
 
     private void Update()
     {
+        // Checks for moving to the target
         CheckForMoveToTarget();
     }
 
+    // If the soldier is selected and not moving, move to target on mouse click
     private void CheckForMoveToTarget()
     {
         if (m_isSelected && m_aiController.IsMoving == false && Input.GetMouseButtonDown(0))
@@ -44,11 +46,13 @@ public abstract class Soldier : MonoBehaviour
         }
     }
 
+    // Sets the path for the soldier to move to the target
     private void MoveToTarget()
     {
         m_aiController.SetPath(m_tileManager.FindPath(transform.position), OnPathComplete);
     }
-
+    
+    // Updates selection status when the path is complete
     private void OnPathComplete()
     {
         if (m_productManager.LastSelectedSoldier == null)
@@ -57,12 +61,14 @@ public abstract class Soldier : MonoBehaviour
             OnDeselect();
     }
 
+    // Selects the soldier on click
     private void OnMouseDown()
     {
         if (Input.GetMouseButtonDown(0) && m_isSelected == false && m_aiController.IsMoving == false)
             StartCoroutine(OnSelectAsync());
     }
 
+    // Selects the soldier async
     private IEnumerator OnSelectAsync()
     {
         m_outline.SetActive(true);
@@ -71,6 +77,7 @@ public abstract class Soldier : MonoBehaviour
         m_productManager.LastSelectedSoldier = this;
     }
     
+    // Selects the soldier
     public void OnSelect()
     {
         m_outline.SetActive(true);
@@ -79,6 +86,7 @@ public abstract class Soldier : MonoBehaviour
             m_productManager.LastSelectedSoldier = this;
     }
 
+    // Deselects the soldier
     private void OnDeselect()
     {
         m_isSelected = false;
@@ -86,6 +94,7 @@ public abstract class Soldier : MonoBehaviour
         m_productManager.LastSelectedSoldier = null;
     }
     
+    // Checks if the target is within attack range
     private bool CheckIsAttackRangeEnough(Vector3 targetPos)
     {
         Vector3 currentPos = transform.position;
@@ -93,6 +102,7 @@ public abstract class Soldier : MonoBehaviour
         return dist < m_attackRange;
     }
 
+    // Attacks to given building
     public void OnAttackToBuilding(Building building)
     {
         var buildingClosestPoint = building.GetComponent<Collider2D>().ClosestPoint(new(transform.position.x, transform.position.y));

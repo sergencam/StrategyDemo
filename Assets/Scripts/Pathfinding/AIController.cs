@@ -11,6 +11,7 @@ public class AIController : MonoBehaviour
     private bool m_isMoving;
     public bool IsMoving => m_isMoving;
 
+    // Sets the given path and will start movement
     public void SetPath(List<Tile> newPath, Action onComplete)
     {
         path = newPath;
@@ -18,6 +19,7 @@ public class AIController : MonoBehaviour
         StartCoroutine(MoveAlongPath(onComplete));
     }
 
+    //Works until follow all nodes and then throws oncomplete action
     private IEnumerator MoveAlongPath(Action onComplete)
     {
         m_isMoving = true;

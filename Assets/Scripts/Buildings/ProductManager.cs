@@ -22,6 +22,7 @@ public class ProductManager : MonoBehaviour
         }
     }
 
+    //If last selected soldier not null it will attack to given building
     public void OnBuildingSelectedForAttack(Building building)
     {
         if (m_lastSelectedSoldier != null)

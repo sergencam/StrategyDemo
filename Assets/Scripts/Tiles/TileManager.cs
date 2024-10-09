@@ -30,6 +30,7 @@ public class TileManager : MonoBehaviour
         SetCameraPosition();
     }
 
+    //Produces as many tiles as the given width and height value
     private void GenerateTile()
     {
         for (int x = 0; x < m_width; x++)
@@ -37,6 +38,7 @@ public class TileManager : MonoBehaviour
                 m_allTiles.Add(Instantiate(m_tilePrefab, new Vector3(x*tileSize, y*tileSize, 0), Quaternion.identity, transform));
     }
 
+    //Sets camera position middle of the created tiles after tiles created
     private void SetCameraPosition()
     {
         Camera cam = Camera.main;
@@ -46,6 +48,7 @@ public class TileManager : MonoBehaviour
         cam.transform.position = camPos;
     }
     
+    //Deactivates tiles if given values cover it
     public void DisableCoveredTiles(Vector3 position, Vector2 size)
     {
         foreach (var tile in m_allTiles)
@@ -63,6 +66,7 @@ public class TileManager : MonoBehaviour
         }
     }
     
+    //Activates tiles if given values cover it
     public void EnableCoveredTiles(Vector3 position, Vector2 size)
     {
         foreach (var tile in m_allTiles)
@@ -81,6 +85,7 @@ public class TileManager : MonoBehaviour
         }
     }
     
+    //Highlights tiles if given values cover it
     public void HighlightCoveredTiles(Vector3 position, Vector2 size, Color highlightColor)
     {
         foreach (var tile in m_allTiles)
@@ -99,6 +104,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    //Gets the closest tile in all tiles by given vector3 value 
     private Tile GetClosestTile(Vector3 pos)
     {
         Tile closestTile = null;
@@ -118,7 +124,7 @@ public class TileManager : MonoBehaviour
         return closestTile;
     }
 
-
+    //Will find the start tile by given position and create path to selected tile
     public List<Tile> FindPath(Vector3 startPos)
     {
         Tile startTile = GetClosestTile(startPos);

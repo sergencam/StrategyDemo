@@ -9,6 +9,7 @@ public class SoldierFactory : MonoBehaviour, ISoldierFactory
 
     private List<Soldier> m_createdSoldiers = new();
 
+    //Creates soldier from scratch and sets position
     public Soldier CreateSoldier(SoldierTypes soldierType, Vector3 pos)
     {
         Soldier createdSoldier;

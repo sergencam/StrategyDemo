@@ -34,18 +34,20 @@ public abstract class Building : MonoBehaviour
 
     private void Update()
     {
+        //Checks for attacks and open info panel
         CheckClickActions();
     }
 
     private void LateUpdate()
     {
+        //Setting position to mouse position when not place to grid
         SetPositionToMousePos();
     }
 
     private void SetPositionToMousePos()
     {
         if(m_isPlaced) return;
-
+        //If left click is performed and a ui is not clicked or a filled place is not clicked, the object will be placed on the tiles
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             bool isPlaceAreaEmpty = PlaceObjectOnGrid(false);
@@ -60,16 +62,20 @@ public abstract class Building : MonoBehaviour
             SetOpacity(1f);
             return;
         }
+        //Highlighting covered grids
         PlaceObjectOnGrid(true);
     }
     
     private bool PlaceObjectOnGrid(bool highlight)
     {
-        if(!m_activeTile)
-            m_activeTile = m_tileManager.ActiveTile;
-        else if(m_activeTile == m_tileManager.ActiveTile && highlight)
+        //Sets building position to active tile position and highlights the covered tiles
+        //If highlight bool is false and place area empty it will set disable covered tiles
+        
+        //Checks for is last active tile same as before and if it is then return
+        if(m_activeTile == m_tileManager.ActiveTile && highlight)
             return false;
         m_activeTile = m_tileManager.ActiveTile;
+        
         Vector3 gridPosition = m_activeTile.transform.position;
         Vector3 realWorldSize = GetRealWorldSize();
         gridPosition.z = 0;
@@ -77,6 +83,7 @@ public abstract class Building : MonoBehaviour
         gridPosition.y += realWorldSize.y / 2f - m_tileManager.tileSize/2f;
         transform.position = gridPosition;
 
+        //Detects is place area empty with throw raycast
         bool isPlaceAreaEmpty = true;
         int tileLayer = LayerMask.NameToLayer("Tile");
         int layerMask = ~(1 << tileLayer); 
@@ -91,6 +98,7 @@ public abstract class Building : MonoBehaviour
         return isPlaceAreaEmpty;
     }
 
+    //Gets real world size by sprite size
     private Vector2 GetRealWorldSize()
     {
         Vector2 spriteSize = m_spriteRenderer.sprite.rect.size;
@@ -98,6 +106,7 @@ public abstract class Building : MonoBehaviour
         return spriteSize / pixelToUnits;
     }
 
+    //Setting opacity value of sprite renderer
     private void SetOpacity(float opacity)
     {
         var srColor = m_spriteRenderer.color;
@@ -107,10 +116,14 @@ public abstract class Building : MonoBehaviour
 
     private void CheckClickActions()
     {
+        //If its not placed return
         if(!m_isPlaced)return;
+        
+        //If a right click is performed on it sets this building for attack
         if (Input.GetMouseButtonDown(1) && CheckObjectUnderMouse())
             ProductManager.Instance.OnBuildingSelectedForAttack(this);
         
+        //If a left click is performed on it opens info panel
         if (Input.GetMouseButtonDown(0) && CheckObjectUnderMouse())
             if (!EventSystem.current.IsPointerOverGameObject())
             {
@@ -119,6 +132,7 @@ public abstract class Building : MonoBehaviour
             }
     }
     
+    //Checks is mouse cursor over this building
     private bool CheckObjectUnderMouse()
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -133,6 +147,7 @@ public abstract class Building : MonoBehaviour
         return false;
     }
 
+    //This effect plays when damage taken and it will flash an image and disappear after given flash time
     private IEnumerator DamageFlashRoutine(float flashTime)
     {
         m_damageFlash.gameObject.SetActive(true);
@@ -140,6 +155,7 @@ public abstract class Building : MonoBehaviour
         m_damageFlash.gameObject.SetActive(false);
     }
     
+    //Reducing the health of the building. if health will be 0 or less will destroy the building
     public void OnTakeDamage(float damage)
     {
         m_hp -= damage;
@@ -152,6 +168,7 @@ public abstract class Building : MonoBehaviour
             m_damageFlashCoroutine = StartCoroutine(DamageFlashRoutine(0.1f));
     }
 
+    //Sets disabled covered tiles enable back. and adds this building to building pool for pooling system
     private void OnDead()
     {
         m_tileManager.EnableCoveredTiles(transform.position, GetRealWorldSize());
@@ -160,6 +177,7 @@ public abstract class Building : MonoBehaviour
         m_uiManager.CheckCanCloseInfoPanel(this);
     }
 
+    //Reset properties when selected from pool system
     public Building OnSelectedFromPool()
     {
         m_hp = m_startHp;
@@ -174,6 +192,7 @@ public abstract class Building : MonoBehaviour
         
     }
     
+    //Sets outline image activation
     public void SetOutline(bool active)
     {
         m_outline.SetActive(active);
