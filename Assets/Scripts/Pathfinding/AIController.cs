@@ -6,16 +6,16 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    private List<Tile> path;
-    private int currentPathIndex;
+    private List<Tile> m_path;
+    private int m_currentPathIndex;
     private bool m_isMoving;
     public bool IsMoving => m_isMoving;
 
     // Sets the given path and will start movement
     public void SetPath(List<Tile> newPath, Action onComplete)
     {
-        path = newPath;
-        currentPathIndex = 0;
+        m_path = newPath;
+        m_currentPathIndex = 0;
         StartCoroutine(MoveAlongPath(onComplete));
     }
 
@@ -23,17 +23,20 @@ public class AIController : MonoBehaviour
     private IEnumerator MoveAlongPath(Action onComplete)
     {
         m_isMoving = true;
-        while (currentPathIndex < path.Count)
+        if (m_path != null && m_path.Count > 0)
         {
-            Vector3 targetPosition = path[currentPathIndex].transform.position;
-
-            while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
+            while (m_currentPathIndex < m_path.Count)
             {
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-                yield return null;
-            }
+                Vector3 targetPosition = m_path[m_currentPathIndex].transform.position;
 
-            currentPathIndex++;
+                while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                    yield return null;
+                }
+
+                m_currentPathIndex++;
+            }
         }
         onComplete?.Invoke();
         m_isMoving = false;
